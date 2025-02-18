@@ -48,6 +48,22 @@ parallel = true
 omit = [
   "src/train_ssc/__about__.py",
 ]
+[tool.hatch.envs.default]
+path = "/code/envs/ssc"
+
+[tool.hatch.envs.prod]
+path = "/code/envs/ssc"
+dependencies = [
+    "click",
+    "torch",
+    "torchvision",
+    "loguru",
+    "numpy",
+    "scikit-learn",
+    "tqdm",
+    "matplotlib",
+
+]
 
 [tool.coverage.paths]
 train_ssc = ["src/train_ssc", "*/train-ssc/src/train_ssc"]

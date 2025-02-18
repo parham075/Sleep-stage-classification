@@ -1,0 +1,15 @@
+name: eeg
+channels:
+  - default
+  - conda-forge
+dependencies:
+  - python == 3.11.11
+  - ipykernel
+  - pip
+  - pip:
+    - numpy
+    - mne
+    - matplotlib
+    - scikit-learn
+    - loguru
+    - click

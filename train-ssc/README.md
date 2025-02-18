@@ -6,9 +6,11 @@
 -----
 
 ## Table of Contents
-
+- [Introduction](#introduction)
 - [Installation](#installation)
 - [License](#license)
+
+## Introduction
 
 ## Installation
 

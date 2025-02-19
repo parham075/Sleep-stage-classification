@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "argo-event-driven.fullname" . }}-test-connection"
+  labels:
+    {{- include "argo-event-driven.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "argo-event-driven.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

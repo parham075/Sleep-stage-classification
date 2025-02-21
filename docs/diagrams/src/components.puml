@@ -1,0 +1,11 @@
+@startuml
+
+component "Data Collection" as datacoll
+component "Data Verification" as dataver
+
+component "Machine Learning Algorithm" as mlalgo
+
+datacoll -- mlalgo
+dataver -- mlalgo
+
+@enduml

@@ -1,11 +1,48 @@
 @startuml
 
 component "Data Collection" as datacoll
+component "Feature Extraction" as fex
+component "Monitoring" as monitoring {
+  component "Online Monitoring" as online_monitor
+  component "Offline Monitoring" as offline_monitor
+}
 component "Data Verification" as dataver
-
 component "Machine Learning Algorithm" as mlalgo
+artifact "Machine Learning Model" as mlmod
 
-datacoll -- mlalgo
-dataver -- mlalgo
+component "Evaluation PipelineTools" as evalpipe
+artifact "Configuration" as config
+component "Machine Resources Management" as mantools
+' mterraform
+component "Service Infrastructure" as infra
+
+component "Production Server" as server {
+  artifact "Evaluated Model" as evamod
+  
+  component "Machine Learning\nAlgorithm - Inference" as mlalgoi
+}
+
+datacoll -d-> dataver
+dataver -d-> fex
+fex -d-> mlalgo
+mlalgo -d-> mlmod
+mlalgo -d-> evalpipe
+mlalgo -r-> config
+
+evalpipe -d-> evamod
+
+offline_monitor -u-> mlalgo
+offline_monitor -u-> mlmod
+
+mlalgoi --> evamod
+online_monitor --> mlalgoi
+online_monitor --> datacoll
+
+' Monitoring
+datacoll -l-> mantools
+dataver -l-> mantools
+fex -l-> mantools
+mlalgo -l-> mantools
+evalpipe -l-> mantools
 
 @enduml

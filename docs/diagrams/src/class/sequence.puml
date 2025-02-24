@@ -33,6 +33,7 @@ end box
 
 activate s3
 activate is3
+activate mantools
 activate infra
 activate config
 
@@ -96,6 +97,7 @@ mlmod --> offline_monitor : ACK
 deactivate s3
 deactivate is3
 deactivate infra
+deactivate mantools
 deactivate config
 deactivate mlmod
 deactivate evamod

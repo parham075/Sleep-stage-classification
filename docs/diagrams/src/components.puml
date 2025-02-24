@@ -24,6 +24,7 @@ node "Internal Infrastructure" {
   component "Production Server" as server {
     artifact "Evaluated Model" as evamod
     component "Machine Learning\nAlgorithm - Inference" as mlalgoi
+    database "Internal Storage/S3" as is3
   }
 }
 
@@ -42,6 +43,7 @@ offline_monitor -u-> mlalgo
 offline_monitor -u-> mlmod
 
 mlalgoi --> evamod
+mlalgoi --> is3
 online_monitor --> mlalgoi
 online_monitor --> datacoll
 

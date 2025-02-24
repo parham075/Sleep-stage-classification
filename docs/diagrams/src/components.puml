@@ -1,36 +1,43 @@
 @startuml
 
-component "Data Collection" as datacoll
-component "Feature Extraction" as fex
-component "Monitoring" as monitoring {
-  component "Online Monitoring" as online_monitor
-  component "Offline Monitoring" as offline_monitor
-}
-component "Data Verification" as dataver
-component "Machine Learning Algorithm" as mlalgo
-artifact "Machine Learning Model" as mlmod
-
-component "Evaluation PipelineTools" as evalpipe
-artifact "Configuration" as config
-component "Machine Resources Management" as mantools
-' mterraform
-component "Service Infrastructure" as infra
-
-component "Production Server" as server {
-  artifact "Evaluated Model" as evamod
-  
-  component "Machine Learning\nAlgorithm - Inference" as mlalgoi
+node "External Server" {
+  database "External Storage/S3" as s3
 }
 
+node "Internal Infrastructure" {
+  component "Data Collection" as datacoll
+  component "Feature Extraction" as fex
+  component "Monitoring" as monitoring {
+    component "Online Monitoring" as online_monitor
+    component "Offline Monitoring" as offline_monitor
+  }
+  component "Data Verification" as dataver
+  component "Machine Learning Algorithm" as mlalgo
+  artifact "Machine Learning Model" as mlmod
+
+  component "Evaluation Pipeline Tools" as evalpipe
+  artifact "Configuration" as config
+  component "Machine Resources Management" as mantools
+  ' mterraform
+  component "Service Infrastructure" as infra
+
+  component "Production Server" as server {
+    artifact "Evaluated Model" as evamod
+    component "Machine Learning\nAlgorithm - Inference" as mlalgoi
+  }
+}
+
+datacoll -u-> s3
 datacoll -d-> dataver
 dataver -d-> fex
 fex -d-> mlalgo
 mlalgo -d-> mlmod
-mlalgo -d-> evalpipe
 mlalgo -r-> config
 
+evalpipe --> mlmod
 evalpipe -d-> evamod
 
+offline_monitor -u-> s3
 offline_monitor -u-> mlalgo
 offline_monitor -u-> mlmod
 

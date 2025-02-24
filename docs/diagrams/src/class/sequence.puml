@@ -46,6 +46,7 @@ infra -> mlalgo ++ : Terraform
 infra -> evalpipe ++ : Terraform
 infra -> mlalgoi ++ : Terraform
 infra -> online_monitor ++ : Terraform
+infra -> offline_monitor ++ : Terraform
 
 mlalgo -> config : Initialize
 
@@ -101,5 +102,15 @@ deactivate mantools
 deactivate config
 deactivate mlmod
 deactivate evamod
+
+deactivate datacoll
+deactivate dataver
+deactivate fex
+deactivate mlalgo
+deactivate evalpipe
+deactivate mlalgoi
+
+deactivate online_monitor
+deactivate offline_monitor
 
 @enduml

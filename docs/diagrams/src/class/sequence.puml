@@ -1,0 +1,103 @@
+@startuml
+autonumber "<b>[00]"
+
+box "External Network"
+  database "External Storage/S3" as s3
+end box
+
+' mterraform
+participant "Service Infrastructure" as infra
+participant "Machine Resources Management" as mantools
+
+participant "Data Collection" as datacoll
+
+participant "Data Verification" as dataver
+participant "Feature Extraction" as fex
+participant "Machine Learning Algorithm" as mlalgo
+database "Configuration" as config
+database "Machine Learning Model" as mlmod
+
+participant "Evaluation PipelineTools" as evalpipe
+
+box "Monitoring"
+  participant "Online Monitoring" as online_monitor
+  participant "Offline Monitoring" as offline_monitor
+end box
+
+database "Internal Storage/S3" as is3
+
+box "Production Server"
+  database "Evaluated Model" as evamod
+  participant "Machine Learning\nAlgorithm - Inference" as mlalgoi
+end box
+
+activate s3
+activate is3
+activate infra
+activate config
+
+== Initialization ==
+
+infra -> datacoll ++ : Terraform
+infra -> dataver ++ : Terraform
+infra -> fex ++ : Terraform
+infra -> mlalgo ++ : Terraform
+infra -> evalpipe ++ : Terraform
+infra -> mlalgoi ++ : Terraform
+infra -> online_monitor ++ : Terraform
+
+mlalgo -> config : Initialize
+
+== Resource Management ==
+
+mantools -> datacoll : Check the load
+datacoll --> mantools : ACK
+mantools -> dataver : Check the load
+dataver --> mantools : ACK
+mantools -> fex : Check the load
+fex --> mantools : ACK
+mantools -> mlalgo : Check the load
+mlalgo --> mantools : ACK
+mantools -> evalpipe : Check the load
+evalpipe --> mantools : ACK
+
+== Ingestion ==
+
+datacoll -> s3 : Read the external data source and grab data
+datacoll -> datacoll : ETL Pipeline
+datacoll -> dataver : Provide ETL Pipeline output
+dataver -> dataver : Check missing data/data quality
+dataver -> fex : Provide checked output
+fex -> fex : Identify the pattern names inside the data
+fex -> mlalgo : Provide extracted data as output
+mlalgo -> mlalgo : Train the model
+mlalgo -> mlmod ++ : Created the trained model as output
+evalpipe -> mlmod : Read the trained model
+evalpipe -> evalpipe : Caclulate the configured metrics
+evalpipe -> evamod ++ : Created the metrics model as output
+mlalgoi -> evamod : Read the model
+mlalgoi -> mlalgoi : Water/Fire/... computation
+mlalgoi -> is3 : Store the artifacts
+
+== Monitoring ==
+
+online_monitor -> mlalgoi
+mlalgoi --> online_monitor : ACK
+online_monitor -> datacoll
+datacoll --> online_monitor : ACK
+
+offline_monitor -> s3
+s3 --> offline_monitor : ACK
+offline_monitor -> mlalgo
+mlalgo --> offline_monitor : ACK
+offline_monitor -> mlmod
+mlmod --> offline_monitor : ACK
+
+deactivate s3
+deactivate is3
+deactivate infra
+deactivate config
+deactivate mlmod
+deactivate evamod
+
+@enduml

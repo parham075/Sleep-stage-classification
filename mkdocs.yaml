@@ -74,5 +74,7 @@ nav:
   - Introduction: 'index.md'
   - C4 Model:
     - Component diagram: 'components.md'
+    - Code diagrams:
+      - Sequence diagram: 'sequence.md'
 
 copyright: <a href="https://img.shields.io/badge/License-CC_BY--SA_4.0-lightgrey.svg">License CC BY-SA 4.0</a>, by <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons</a>
